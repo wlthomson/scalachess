@@ -4,6 +4,7 @@ package format.pgn
 import format.Forsyth
 import Pos._
 
+import chess.variant.ThreeCheck
 import chess.format.FEN
 
 class DumperTest extends ChessTest {
@@ -65,6 +66,52 @@ class DumperTest extends ChessTest {
     B7 -> C6,
     E2 -> A6
   )
+
+  val pikachuGambit = Game(Board init ThreeCheck).playMoves(
+    E2 -> E4,
+    E7 -> E6,
+    B1 -> C3,
+    F8 -> B4,
+    G1 -> F3,
+    G8 -> E7,
+    E4 -> E5,
+    B4 -> C3,
+    B2 -> C3,
+    E7 -> G6,
+    H2 -> H4,
+    G6 -> F4,
+    D2 -> D4,
+    F4 -> G2,
+    F1 -> G2,
+    B8 -> C6,
+    C1 -> G5,
+    C6 -> E7,
+    F3 -> D2,
+    C7 -> C6,
+    D2 -> E4,
+    E8 -> G8,
+    E4 -> F6,
+    G7 -> F6,
+    G2 -> E4,
+    F6 -> F5,
+    G5 -> E7,
+    D8 -> E7,
+    H1 -> G1,
+    G8 -> H8,
+    G1 -> G8
+  )
+
+  "three check variant" should {
+    "move list" in {
+      "Pikachu Gambit" in {
+        pikachuGambit map (_.pgnMoves) must beValid.like { case ms =>
+          ms must_== "e4 e6 Nc3 Bb4 Nf3 Ne7 e5 Bxc3 bxc3 Ng6 h4 Nf4 d4 Nxg2+ Bxg2 Nc6 Bg5 Ne7 Nd2 c6 Ne4 O-O Nf6+ gxf6 Be4 f5 Bxe7 Qxe7 Rg1+ Kh8 Rg8#"
+            .split(' ')
+            .toList
+        }
+      }
+    }
+  }
 
   "standard game" should {
     "move list" in {
